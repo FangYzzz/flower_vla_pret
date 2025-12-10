@@ -12,10 +12,14 @@ KIT_IRL_REAL_KITCHEN_DATASET_INDICES = [
     3,  # kit_irl_real_kitchen_lang
     4,  # kit_irl_real_kitchen_vis
 ]
+PNP_SCORE_DATASET_INDICES = [
+    73,  # pnp_score
+]
 
 class UhaInference(SimplerUhaInference):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        print("[Kitchen UhaInference] image_size =", self.image_size)
 
         # kitchen uses both primary and secondary
         self.agent.agent.img_modalities = ["image_primary", "image_secondary"]
@@ -34,7 +38,29 @@ class UhaInference(SimplerUhaInference):
         
         # Action processing
         self.action_space_index = torch.tensor([get_action_space_index(robot_type='JOINT_POS', num_arms=1, control_mode='position', return_tensor=False)])
-        self.frequency = torch.tensor([DATASET_FREQUENCY_MAP[KIT_IRL_REAL_KITCHEN_DATASET_INDICES[0]]])
+        # self.frequency = torch.tensor([DATASET_FREQUENCY_MAP[KIT_IRL_REAL_KITCHEN_DATASET_INDICES[0]]])
+        self.frequency = torch.tensor([DATASET_FREQUENCY_MAP[PNP_SCORE_DATASET_INDICES[0]]])
+
+    def _preprocess_image(self, img: np.ndarray) -> torch.Tensor:
+        """
+        img: [H, W, 3], uint8
+        1. 用父类的 _resize_image 按 self.image_size resize 成正方形
+        2. 变成 [1, 1, 3, H, W] 的 torch.uint8 tensor，并放到 self.device
+        """
+        assert img.ndim == 3 and img.shape[2] == 3, f"expected HWC image, got shape {img.shape}"
+
+        # 调用父类的 _resize_image
+        img_resized = self._resize_image(img)   # 结果是 [self.image_size, self.image_size, 3]，例如 224x224
+
+        tensor = (
+            torch.as_tensor(img_resized, dtype=torch.uint8)
+            .permute(2, 0, 1)      # [3, H, W]
+            .unsqueeze(0)          # [1, 3, H, W]
+            .unsqueeze(0)          # [1, 1, 3, H, W]
+            .to(self.device)
+        )
+        return tensor
+
 
     def step(self, primary_image: np.ndarray, secondary_image: np.ndarray, task_description: Optional[str] = None, *args, **kwargs) -> tuple[dict[str, np.ndarray], dict[str, np.ndarray]]:
         """
@@ -59,8 +85,11 @@ class UhaInference(SimplerUhaInference):
             self.agent.agent.return_act_chunk = True
 
         assert primary_image.dtype == np.uint8
-        primary_image = torch.as_tensor(primary_image, dtype=torch.uint8).permute(2, 0, 1).unsqueeze(0).unsqueeze(0)  # [1, 1, 3, H, W]
-        secondary_image = torch.as_tensor(secondary_image, dtype=torch.uint8).permute(2, 0, 1).unsqueeze(0).unsqueeze(0)  # [1, 1, 3, H, W]
+        assert secondary_image.dtype == np.uint8
+        primary_image = self._preprocess_image(primary_image)      # [1, 1, 3, H, W], square
+        secondary_image = self._preprocess_image(secondary_image)  # [1, 1, 3, H, W], square
+        # primary_image = torch.as_tensor(primary_image, dtype=torch.uint8).permute(2, 0, 1).unsqueeze(0).unsqueeze(0)  # [1, 1, 3, H, W]
+        # secondary_image = torch.as_tensor(secondary_image, dtype=torch.uint8).permute(2, 0, 1).unsqueeze(0).unsqueeze(0)  # [1, 1, 3, H, W]
 
         input_observation = {
             "observation": {

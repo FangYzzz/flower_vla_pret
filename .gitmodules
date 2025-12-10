@@ -1,3 +1,6 @@
 [submodule "SimplerEnv"]
 	path = SimplerEnv
 	url = git@github.com:Toradus/SimplerEnv.git
+[submodule "droid"]
+	path = droid
+	url = https://github.com/FangYzzz/droid

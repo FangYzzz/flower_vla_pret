@@ -1,0 +1,38 @@
+# conf/eval/kitchen_server.yaml
+
+# train_run_dir: /home/yuan/flower_vla_pret/logs/runs/2025-12-07/
+# checkpoint: 19-29-46/checkpoint_100000
+train_run_dir: /home/yuan/flower_vla_pret/logs/runs/2025-12-07/
+checkpoint: 19-29-51/checkpoint_100000
+
+# train_run_dir: /home/yuan/flower_vla_pret/logs/runs/2025-12-07/
+# checkpoint: 23-57-46/checkpoint_100000
+# train_run_dir: /home/yuan/flower_vla_pret/logs/runs/2025-12-07/
+# checkpoint: 23-57-52/checkpoint_100000
+
+pred_action_horizon: 5
+multistep: 1
+ensemble_strategy: false
+num_sampling_steps: 1
+use_ema: False
+use_torch_compile: False
+use_dopri5: False
+
+
+# flower_inference_wrapper
+# saved_model_base_dir: str = "/home/reuss/code/flower_vla_policy/logs/runs/2025-01-15/",
+# saved_model_path: str = "15-23-08/checkpoint_5000",
+# image_size: int = 224,
+#  pred_action_horizon: int = 5,
+# action_scale: float = 1.0,
+# policy_setup: str = "google_robot",
+# device: torch.device = torch.device("cuda" if torch.cuda.is_available() else "cpu"),
+#  ensemble_strategy: str = "false",
+#  multistep: int = 1,
+#  num_sampling_steps: int = 1,
+# adaptive_ensemble_alpha: float = 0.1,
+# exp_decay: float = 0,
+#  use_torch_compile: bool = False,
+#  use_ema: bool = False,
+#  use_dopri5: bool = False,
+# cfg_lambda: float = 1.0,
