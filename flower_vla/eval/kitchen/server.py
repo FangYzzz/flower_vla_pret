@@ -71,6 +71,8 @@ class FlowerServer:
             use_ema=cfg.use_ema,
             use_torch_compile=cfg.use_torch_compile,
             use_dopri5=cfg.use_dopri5,
+            history_horizon = cfg.history_horizon,
+            exp_weight = cfg.exp_weight
         )
 
         self.text = None
@@ -87,7 +89,7 @@ class FlowerServer:
         return "reset"
 
     def sample_actions(self, payload: Dict[Any, Any]):
-        # payload needs to contain primary_image, secondary_image
+        # payload needs to contain primary_image, wrist_image
 
         assert self.text is not None
 
@@ -97,12 +99,31 @@ class FlowerServer:
             self.model.ensemble_strategy = payload['multistep']
 
         try:
-            action = self.model.step(primary_image=payload['primary_image'], secondary_image=payload['secondary_image'], task_description=self.text)
+            action = self.model.step(primary_image=payload['primary_image'], wrist_image=payload['wrist_image'], task_description=self.text)
+            # action = self.model.step(primary_image=payload['primary_image'], task_description=self.text)
 
             return json_response(action)
         except:
             print(traceback.format_exc())
             return "error"
+    
+    # def sample_actions(self, payload: Dict[Any, Any]):
+    #     # payload needs to contain primary_image, secondary_image
+
+    #     assert self.text is not None
+
+    #     if "ensemble" in payload and payload["ensemble"]:
+    #         self.model.ensemble_strategy = payload['ensemble']
+    #     if "multistep" in payload and payload["multistep"]:
+    #         self.model.ensemble_strategy = payload['multistep']
+
+    #     try:
+    #         action = self.model.step(primary_image=payload['primary_image'], secondary_image=payload['secondary_image'], task_description=self.text)
+
+    #         return json_response(action)
+    #     except:
+    #         print(traceback.format_exc())
+    #         return "error"
 
 @hydra.main(config_path="../../../conf/eval", config_name="kitchen_server")
 def main(cfg):

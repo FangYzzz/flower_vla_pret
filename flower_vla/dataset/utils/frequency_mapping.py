@@ -77,6 +77,7 @@ DATASET_FREQUENCY_MAP = {
     71: "calvin_abc",
     72: 50,  # aloha_sim_transfer
 
-    73: 15, # pnp_score
+    73: 10,  # pnp_score_eef
+    74: 15,  # pnp_score_joint
 }
 

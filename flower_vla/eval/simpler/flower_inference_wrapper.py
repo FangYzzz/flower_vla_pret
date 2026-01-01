@@ -67,6 +67,8 @@ class UhaInference:
         use_ema: bool = False,
         use_dopri5: bool = False,
         cfg_lambda: float = 1.0,
+        history_horizon: int = 15,
+        exp_weight = 0.1,
     ) -> None:
         self.lang_embed_model = TokenVLM("microsoft/Florence-2-large")
         assert ensemble_strategy in ["false", "cogact", "act", "octo"]
@@ -79,6 +81,7 @@ class UhaInference:
         self.use_torch_compile = use_torch_compile
         self.use_ema = use_ema
         self.use_dopri5 = use_dopri5
+        self.exp_weight = 0.1
         # ------------------------- #
         model_path_split = saved_model_path.split("/")
         weights_path = saved_model_base_dir + model_path_split[0]
@@ -138,6 +141,7 @@ class UhaInference:
         self.task_description = None
         self.task_description_embedding = None
         self.sticky_action_is_on = False
+        self.history_horizon = history_horizon
         self.gripper_action_repeat = 0
         self.sticky_gripper_action = 0.0
         self.previous_gripper_action = None
@@ -350,15 +354,22 @@ class UhaInference:
         Input: cur_action of shape [1, T, D_action] or [D_action]
         Output: single action step
         """
+        print(self.history_horizon)
+        if len(self.action_history) >= self.history_horizon:
+            self.action_history.pop(0)
         self.action_history.append(cur_action)
         num_actions = len(self.action_history)
         
         if cur_action.ndim == 1:
             curr_act_preds = np.stack(self.action_history)
         else:
+            # print(self.action_history[-1].shape)
             curr_act_preds = np.stack(
-                [pred_actions[i] for (i, pred_actions) in zip(range(num_actions - 1, -1, -1), self.action_history)]
+                [pred_actions[0, i] for (i, pred_actions) in zip(range(num_actions - 1, -1, -1), self.action_history)]
             )
+            # curr_act_preds = np.stack([
+            #     pred_actions[0, i] for i, pred_actions in enumerate(self.action_history)
+            # ])
         
         # More recent predictions get exponentially less weight than older predictions
         weights = np.exp(-self.exp_weight * np.arange(num_actions))
@@ -384,7 +395,10 @@ class UhaInference:
             return act_chunk[0]  # Return first action from the chunk
         
         # Add current chunk to history
+        if len(self.act_chunk_deque) >= self.history_horizon:
+            self.act_chunk_deque.popleft()
         self.act_chunk_deque.append(act_chunk)
+
         num_actions = len(self.act_chunk_deque)
         curr_act_preds = np.stack(self.act_chunk_deque)  # [num_actions, T, D_action]
         

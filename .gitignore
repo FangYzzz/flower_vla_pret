@@ -61,7 +61,11 @@ coverage.xml
 .hypothesis/
 .pytest_cache/
 cover/
-
+robot_evaluation_script/
+tele_op/
+videos/
+results/
+wrist_images/
 # Translations
 *.mo
 *.pot

@@ -47,16 +47,38 @@ class ActionEncoding(IntEnum):
 
 OXE_DATASET_CONFIGS = {
 
-    "pnp_score": {
+    "pnp_score_eef": {
         "image_obs_keys": {"primary": "image", "secondary": None, "wrist": "wrist_image"},
         "depth_obs_keys": {"primary": None, "secondary": None, "wrist": None},
-        "proprio_encoding": ProprioEncoding.POS_QUAT,
-        "action_encoding": ActionEncoding.EEF_POS_QUAT,
+        "proprio_encoding": ProprioEncoding.POS_EULER,
+        "action_encoding": ActionEncoding.EEF_POS,
         "proprio_obs_key": "proprio",  # And this here
-        "data_dir": "/home/yuan/tensorflow_datasets",
+        "data_dir": "/home/vault/g105ea/g105ea14/tensorflow_datasets",
         "language_key": "language_instruction", # chose "language_instruction*" for all languages texts available,
         # "shuffle": False,
     },
+
+    "pnp_score_joint": {
+        "image_obs_keys": {"primary": "image", "secondary": None, "wrist": "wrist_image"},
+        "depth_obs_keys": {"primary": None, "secondary": None, "wrist": None},
+        "proprio_encoding": ProprioEncoding.JOINT,
+        "action_encoding": ActionEncoding.JOINT_POS,
+        "proprio_obs_key": "proprio",  # And this here
+        "data_dir": "/home/vault/g105ea/g105ea14/tensorflow_datasets",
+        "language_key": "language_instruction", # chose "language_instruction*" for all languages texts available,
+        # "shuffle": False,
+    },
+
+    # "pnp_score": {
+    #     "image_obs_keys": {"primary": "image", "secondary": None, "wrist": "wrist_image"},
+    #     "depth_obs_keys": {"primary": None, "secondary": None, "wrist": None},
+    #     "proprio_encoding": ProprioEncoding.POS_QUAT,
+    #     "action_encoding": ActionEncoding.EEF_POS,
+    #     "proprio_obs_key": "proprio",  # And this here
+    #     "data_dir": "/home/yuan/tensorflow_datasets",
+    #     "language_key": "language_instruction", # chose "language_instruction*" for all languages texts available,
+    #     # "shuffle": False,
+    # },
 
     #################Aloha Sim Transfer#######################
     "aloha_sim_transfer": {

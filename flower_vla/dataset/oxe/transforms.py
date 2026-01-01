@@ -208,7 +208,7 @@ def get_action_space_index(robot_type, num_arms, control_mode='position', return
         ('JOINT_POS_NAV', 'position', 1): 0,  # joint-1-arm pos with navigation 
         ('EEF_POS_NAV', 'velocity', 1): 1,  # end-effector delta-2-arm
         ('NAV', 'position', 1): 3,  # navigation
-        ('JOINT_POS', 'velocity', 1): 5,  # delta joint
+        ('JOINT_POS', 'velocity', 1): 0,  # delta joint
         ('JOINT_POS_BIMANUAL_NAV', 'velocity', 2): 6,  # joint-2-arm pos with navigation
         ('JOINT_POS_BIMANUAL', 'velocity', 2): 6,  # joint-2-arm pos (unified for bimanual or regular)
         ('EEF_POS_QUAT', 'position', 1):7,
@@ -225,22 +225,64 @@ def get_action_space_index(robot_type, num_arms, control_mode='position', return
     else:
         return index
 
-###########################################################################################
-def pnp_dataset_eef_abs_quat_transform(trajectory: Dict[str, Any]) -> Dict[str, Any]:
-    trajectory["action"] = trajectory["action"]
+# ###########################################################################################
+# def pnp_dataset_eef_abs_quat_transform(trajectory: Dict[str, Any]) -> Dict[str, Any]:
+#     trajectory["action"] = trajectory["action"]
+#     trajectory["observation"]["proprio"] = trajectory["observation"]["state"]
+#     for key in ['language_instruction', 'language_instruction_2', 'language_instruction_3']:
+#         if key in trajectory:
+#             trajectory[key] = format_instruction(
+#                 trajectory[key],
+#                 robot_name="Franka Panda",
+#                 action_space="eef quat position",
+#                 number_arms="1",
+#                 prompt_style=PROMPT_STYLE,
+#             )
+
+#     trajectory["robot_information"] = add_robot_information("Franka", "delta eef quat", 1)
+#     trajectory['action_space_index'] = get_action_space_index('EEF_POS_QUAT', 1, 'position')
+#     # trajectory['frequency'] = tf.constant(10, dtype=tf.int32)
+#     return trajectory
+
+###################################################################################################
+def pnp_dataset_eef_delta_transform(trajectory: Dict[str, Any]) -> Dict[str, Any]:
     trajectory["observation"]["proprio"] = trajectory["observation"]["state"]
     for key in ['language_instruction', 'language_instruction_2', 'language_instruction_3']:
         if key in trajectory:
             trajectory[key] = format_instruction(
                 trajectory[key],
                 robot_name="Franka Panda",
-                action_space="eef quat position",
+                action_space="Delta End-Effector",
                 number_arms="1",
                 prompt_style=PROMPT_STYLE,
             )
+    trajectory["robot_information"] = add_robot_information("Franka", "delta end-effector", 1)
+    trajectory['action_space_index'] = get_action_space_index('EEF_POS', 1, 'velocity')
+    # trajectory['frequency'] = tf.constant(10, dtype=tf.int32)
+    return trajectory
 
-    trajectory["robot_information"] = add_robot_information("Franka", "delta eef quat", 1)
-    trajectory['action_space_index'] = get_action_space_index('EEF_POS_QUAT', 1, 'position')
+###################################################################################################
+def pnp_dataset_delta_joint_transform(trajectory: Dict[str, Any]) -> Dict[str, Any]:
+    # action = trajectory["action"]
+    # state  = trajectory["observation"]["state"]
+    # delta_7 = action[..., :7] - state[..., :7]
+    # rest = action[..., 7:]
+    # new_action = tf.concat([delta_7, rest], axis=-1)
+    # # print("action shape::::::::::::::",action.shape)
+
+    # trajectory["action"] = new_action
+    trajectory["observation"]["proprio"] = trajectory["observation"]["state"]
+    for key in ['language_instruction', 'language_instruction_2', 'language_instruction_3']:
+        if key in trajectory:
+            trajectory[key] = format_instruction(
+                trajectory[key],
+                robot_name="Franka Panda",
+                action_space="joint position",
+                number_arms="1",
+                prompt_style=PROMPT_STYLE,
+            )
+    trajectory["robot_information"] = add_robot_information("Franka", "delta joint", 1)
+    trajectory['action_space_index'] = get_action_space_index('JOINT_POS', 1, 'position')
     # trajectory['frequency'] = tf.constant(10, dtype=tf.int32)
     return trajectory
 
@@ -1888,5 +1930,6 @@ OXE_STANDARDIZATION_TRANSFORMS = {
     "aloha_sim_transfer": aloha_sim_transfer_dataset_transform,
     "aloha_sim_insertion": aloha_sim_insertion_dataset_transform,
     
-    "pnp_score": pnp_dataset_eef_abs_quat_transform,
+    "pnp_score_eef": pnp_dataset_eef_delta_transform,
+    "pnp_score_joint": pnp_dataset_delta_joint_transform,
 }

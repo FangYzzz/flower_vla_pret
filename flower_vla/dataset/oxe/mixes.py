@@ -1,7 +1,11 @@
 """Defines dataset mixtures and weights for the Open X-Embodiment Datasets."""
 
-PNP_SCORE = [
-    ("pnp_score", 1.0),
+PNP_SCORE_EEF = [
+    ("pnp_score_eef", 1.0),
+]
+
+PNP_SCORE_JOINT = [
+    ("pnp_score_joint", 1.0),
 ]
 
 BRIDGE_MIX = [
@@ -381,5 +385,6 @@ OXE_NAMED_MIXES = {
     'test': TEST,
     "flowereef": FLOWER_EEF_MIX,
     
-    "pnp_score": PNP_SCORE
+    "pnp_score_eef": PNP_SCORE_EEF,
+    "pnp_score_joint": PNP_SCORE_JOINT
 }

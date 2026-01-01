@@ -15,27 +15,27 @@ agent:
   img_modalities: ${img_modalities}
   lang_modalities: ${lang_modalities}
   target_modality: ${target_modality}
-  vlm_path: microsoft/Florence-2-base
+  vlm_path: microsoft/Florence-2-large   # Florence-2-base
   freeze_florence: False
   freeze_vision_tower: False
   freeze_embeddings_only: True
-  use_second_view: False
+  use_second_view: True  # False
   token_dropout: 0.1
   cfg_dropout: 0.0
   sampling_type: 'uniform'
-  second_view_key: 'image_secondary'
+  second_view_key:  'image_wrist'  # 'image_secondary'
   multistep: ${act_seq_len}
-  num_sampling_steps: 4
+  num_sampling_steps: 5 # 4
   lowdim_obs_dim: ${obs_dim}
   action_dim: ${act_dim}
   act_window_size: ${act_seq_len}
   use_causal_attention: True
-  use_proprio: True
+  use_proprio: False
   # flow configuration
   action_type_adaln: True
   dit_dim: 1024
-  n_heads: 8
-  n_layers: 12
+  n_heads: 16 #8
+  n_layers: 18 #12
   attn_pdrop: 0.3
   resid_pdrop: 0.1
   mlp_pdrop: 0.1
@@ -43,5 +43,5 @@ agent:
   use_adaln_cond: False
   use_rope: True
   use_nope: False
-  query_seq_len: 120
+  query_seq_len: 100 #120
   rope_theta: 1000.0

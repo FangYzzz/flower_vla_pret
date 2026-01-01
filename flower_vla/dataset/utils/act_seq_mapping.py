@@ -76,6 +76,7 @@ DATASET_ACT_SEQ_MAP = {
     71: 10,  # Calvin_ABC
     72: 100,  # aloha_sim_insertion
     
-    73: 20, # pnp_score
+    73: 10,  # pnp_score_eef
+    74: 10,  # pnp_score_joint
 }
 

@@ -73,7 +73,8 @@ DATASET_INDEX_MAPPING = {
     71: "calvin_abc",
     72: "aloha_sim_transfer",
     
-    73: "pnp_score",
+    73: "pnp_score_eef",
+    74: "pnp_score_joint",
 }
 
 # Reverse mapping for convenience if needed

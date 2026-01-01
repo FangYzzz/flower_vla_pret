@@ -25,12 +25,14 @@ rampup_ratio: 0.001 # 1-decay
 goal_relabeling_strategy: null 
 subsample_length: null 
 skip_unlabeled: True
-load_camera_views: ["primary"] # , "secondary", "wrist"] #, "secondary", "wrist"]
+# load_camera_views: ["primary"] # , "secondary", "wrist"] #, "secondary", "wrist"]
+load_camera_views: ["primary", "wrist"] # , "secondary", "wrist"] #, "secondary", "wrist"]
 
 # model
 obs_modalities: 'observation'
 goal_modalities: 'task' # 'lang_text'
-img_modalities: ["image_primary"] # , "image_wrist", "image_secondary" ] #,  "image_wrist"]  # "image_secondary",
+# img_modalities: ["image_primary"] # , "image_wrist", "image_secondary" ] # , "image_wrist"]  # "image_secondary",
+img_modalities: ["image_primary", "image_wrist"]
 lang_modalities: ["language_instruction"]
 target_modality: 'action'
 drop_last: True
@@ -45,7 +47,7 @@ static_graph: False
 
 act_dim: 8
 max_proprio_dim: 16
-act_seq_len: 16 
+act_seq_len: 20 
 max_train_steps: 800000 # 100000 # 31000 # 23000 # 50000
 max_eval_steps: 100 #0 #00 #250 # 50
 eval_every_n_steps: 10000 #00 #000 # 2000
