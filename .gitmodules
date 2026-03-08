@@ -1,12 +1,3 @@
 [submodule "SimplerEnv"]
 	path = SimplerEnv
 	url = git@github.com:Toradus/SimplerEnv.git
-# [submodule "droid"]
-# 	path = droid
-# 	url = https://github.com/FangYzzz/droid
-# [submodule "residual-offpolicy-rl"]
-# 	path = residual-offpolicy-rl
-# 	url = "https://github.com/FangYzzz/residual-offpolicy-rl"
-# [submodule "GroundingDINO"]
-# 	path = GroundingDINO
-# 	url = https://github.com/FangYzzz/GroundingDINO
