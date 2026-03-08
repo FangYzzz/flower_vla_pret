@@ -1,12 +1,27 @@
-train_run_dir: /home/yuan/flower_vla_pret/logs/runs/20-45-15
-checkpoint: checkpoint_60000
+# train_run_dir: /home/yuan/flower_vla_pret/logs/runs/pnp_flower_wrist/2026-01-08_03-28-20_tomato5banana1-1
+# checkpoint: checkpoint_60000
+train_run_dir: /home/yuan/flower_vla_pret/logs/runs/pnp_flower_wrist/2026-01-18_04-23-14_tomato5banana5cube51-1
+checkpoint: checkpoint_10000
 
-pred_action_horizon: 20
-multistep: 15
-ensemble_strategy: "act" # false # cogact # act
+# train_run_dir: /home/yuan/flower_vla_pret/logs/runs/pnp_flower_wrist/wrist_padding/00-36-16
+# checkpoint: checkpoint_30000
+
+# pred_action_horizon: 20 # 25 50
+# multistep: 15 #20 40 
+# ensemble_strategy: "act" # false # act
+# num_sampling_steps: 5
+# use_ema: False
+# use_torch_compile: False
+# use_dopri5: False 
+# history_horizon: 10
+# exp_weight: 0.1 # 0.1 越小/大 → 越偏向“最新/旧的预测”
+
+pred_action_horizon: 20 # 25 50
+multistep: 15           # 20 40 
+ensemble_strategy: "false" # false # act
 num_sampling_steps: 5
 use_ema: False
 use_torch_compile: False
-use_dopri5: True 
-history_horizon: 10
-exp_weight: 10
+use_dopri5: False 
+history_horizon: 15
+exp_weight: 0.9

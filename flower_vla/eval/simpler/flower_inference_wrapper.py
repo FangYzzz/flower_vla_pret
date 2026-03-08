@@ -81,7 +81,8 @@ class UhaInference:
         self.use_torch_compile = use_torch_compile
         self.use_ema = use_ema
         self.use_dopri5 = use_dopri5
-        self.exp_weight = 0.1
+        # self.exp_weight = 0.1
+        self.exp_weight = exp_weight
         # ------------------------- #
         model_path_split = saved_model_path.split("/")
         weights_path = saved_model_base_dir + model_path_split[0]

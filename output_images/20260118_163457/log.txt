@@ -1,0 +1,5 @@
+2026-01-18 16:34:58 | INFO | TaskRewardGeneration initialised (tasks: 2, max_timesteps: 600s)
+2026-01-18 16:34:58 | WARNING | _ws_call snapshot attempt 1/3 failed: [Errno 111] Connect call failed ('127.0.0.1', 4242)
+2026-01-18 16:34:59 | WARNING | _ws_call snapshot attempt 2/3 failed: [Errno 111] Connect call failed ('127.0.0.1', 4242)
+2026-01-18 16:35:01 | WARNING | _ws_call snapshot attempt 3/3 failed: [Errno 111] Connect call failed ('127.0.0.1', 4242)
+2026-01-18 16:35:01 | INFO | Main loop finished.
